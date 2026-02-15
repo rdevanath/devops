@@ -10,7 +10,7 @@ CI/CD | DevOps | Cloud Deployment | Secure Automation
 
 ---
 
-## 🔹 What This Portfolio Demonstrates
+## 🔹 What this portfolio demonstrates
 
 ✔ CI/CD pipeline design  
 ✔ Blue-green-like deployment logic  
@@ -22,7 +22,7 @@ CI/CD | DevOps | Cloud Deployment | Secure Automation
 
 ---
 
-## 🏗 Architecture Patterns Used
+## 🏗 Architecture patterns used
 
 - Single-job linear CI
 - Multi-job modular CI/CD
@@ -32,7 +32,7 @@ CI/CD | DevOps | Cloud Deployment | Secure Automation
 
 ---
 
-## 💡 Why This Matters
+## 💡 Why this matters
 
 These pipelines simulate real-world DevOps environments:
 
@@ -44,13 +44,9 @@ These pipelines simulate real-world DevOps environments:
 
 ---
 
-# DevOps CI/CD Pipeline Portfolio
+## 🚀 Pipelines Overview
 
 Seven Azure DevOps YAML pipelines demonstrating progressive CI/CD patterns — from Python deployments to enterprise Java and Docker containerization.
-
----
-
-## 🚀 Pipelines Overview
 
 ### 1️⃣ Python Blue-Green (Single Job)
 - Deploy v1 → wait 10s
@@ -87,14 +83,5 @@ Seven Azure DevOps YAML pipelines demonstrating progressive CI/CD patterns — f
 ### 7️⃣ Parameterized Docker Runtime
 - Build + run container
 - Dynamic port mapping at queue time
-
----
-
-## 🔄 Pattern Evolution
-
-Local switching (1–2)  
-→ Secure file transfer (3)  
-→ Enterprise Java deployment (4–5)  
-→ Container-native workflows (6–7)
 
 ---
