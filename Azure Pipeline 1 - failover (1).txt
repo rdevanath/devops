@@ -1,0 +1,79 @@
+trigger:
+- main
+
+pool:
+  name: agent_name
+
+# Step 1: Validate Python installation
+steps:
+- script: python --version
+  displayName: 'Check Python version'
+
+- script: pip --version
+  displayName: 'Check pip version'
+
+# Step 2: Install dependencies (if you have requirements.txt)
+ - script: pip install -r requirements.txt
+   displayName: 'Install dependencies'
+
+# Step 3: start /B Run Python app ver 1
+- script: python python_app_build_1.py
+  displayName: 'Deploys Build ver 1'
+
+# Step 4: delay for 10 seconds before killing the build (for linux builds)
+- script: |
+    echo "Waiting for 10 seconds..."
+    timeout /t 10 /nobreak
+  displayName: 'Wait before killing build'
+
+# Step 4: delay for 10 seconds before killing the build (for windows builds)
+# - script: |
+#     echo "Waiting for 10 seconds..."
+#     ping -n 11 127.0.0.1 > nul
+#   displayName: 'Wait before killing build'
+
+# Step 4: delay for 10 seconds before killing the build (for windows builds) - powershell script
+# - powershell: |
+#     Write-Output "Waiting for 10 seconds..."
+#     Start-Sleep -Seconds 10
+#   displayName: 'Wait before killing build'
+
+# Step 5: Kill the process on port 8000
+- script: |
+    for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8000') do taskkill /PID %%a /F
+  displayName: 'Kills Build ver 1'
+
+# Step 6: Run Python app ver 2
+- script: python python_app_build_2.py
+  displayName: 'Deploys Build ver 2'
+
+# Step 7: Runs if Build ver 2 fails
+- script: start /B python python_app_build_1.py
+  displayName: 'Fall back to Build ver 1 due to ver 2 failure'
+  condition: failed()
+
+# Step 8: Creates build Artifac
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: 'python_app_build_1.py'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+  displayName: 'Copied to Artifact server'
+
+# Step 9: Publish staged files so they appear in the Artifacts tab
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish Python app artifact'
+
+#Step 10: Download the build artifact
+- task: DownloadBuildArtifacts@0
+  inputs:
+    buildType: 'current'
+    downloadType: 'single'
+    artifactName: 'drop'
+    downloadPath: '$(Build.SourcesDirectory)/artifacts'
+  displayName: 'Download Python app artifact'
