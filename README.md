@@ -39,6 +39,8 @@ These pipelines simulate real-world DevOps environments:
 - Multi-stage production deployment
 - Secure file injection
 - Parameterized runtime infrastructure
+  
+---
 
 ### 1️⃣ Python Blue-Green (Single Job)
 - Deploy v1 → wait 10s
@@ -87,6 +89,8 @@ These pipelines simulate real-world DevOps environments:
 - Multi-Container Orchestration
 - DevOps Workflow Automation
 
+---
+
 ### 🔧 Configuration Management – Ansible
 
 Automated installation of OpenJDK 21 and Maven on Ubuntu systems using idempotent playbooks.
@@ -100,6 +104,8 @@ Automated installation of OpenJDK 21 and Maven on Ubuntu systems using idempoten
 **Tech:** Ansible, Ubuntu Linux
 
 **Value:** Demonstrates production-style configuration management and environment consistency.
+
+---
 
 ### ☁️ Infrastructure as Code – Terraform (AWS EC2)
 
@@ -115,6 +121,8 @@ Provisioned AWS EC2 infrastructure using Terraform.
 **Tech:** Terraform, AWS EC2
 
 **Value:** Shows real-world cloud provisioning, dependency management, and scalable IaC design. Structured for future modularization and multi-environment expansion.
+
+---
 
 ### 🐳 Containerization – Docker
 
@@ -133,6 +141,8 @@ Provisioned AWS EC2 infrastructure using Terraform.
 **Tech:** Docker, Maven, Spring Boot, Tomcat
 
 **Value:** Demonstrates enterprise container best practices, optimized builds, and deployment strategy understanding (JAR vs WAR).
+
+---
 
 ### 🧩 Multi-Container Orchestration – Docker Compose
 
