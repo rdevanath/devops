@@ -1,0 +1,67 @@
+trigger:
+- main
+
+stages:
+- stage: Build
+  displayName: "Build Stage"
+  jobs:
+  - job: BuildWar
+    displayName: "Build war File"
+    # Step 1- Triggers on main branch. Runs on specific agent "tomjav" in "ci_build" pool
+    pool: 
+      name: ci_build
+      demands:
+      - Agent.Name -equals tomjav
+    # Step 2 - Maven@4 task executes mvn install on pom.xml, compiling the Java project and generating target/ROOT.war
+    steps:
+    - task: Maven@4
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'install'
+        publishJUnitResults: false
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
+    # Step 3 - Adds EC2 host to ~/.ssh/known_hosts via ssh-keyscan (avoids host key verification prompts).
+    # Sets test1.pem permissions to 400 (SSH key security).
+    # SCPs the fresh ROOT.war to /home/ubuntu/ on remote EC2.
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          ssh-keyscan -H <ip_address> >> ~/.ssh/known_hosts
+          chmod 400 test1.pem
+          scp -i "test1.pem" $(System.DefaultWorkingDirectory)/target/ROOT.war user_name@<ip_address>:/home/ubuntu/
+          echo "Hello World"
+      displayName: "Copy war file to AWS EC2"
+
+# Step 4  - Deployment Steps (runOnce strategy on remote EC2 via implicit SSH)
+- stage: production
+  dependsOn: Build
+  displayName: "Production"
+  jobs:
+  - deployment: DeployWar
+    displayName: "Deploy the War File"
+    environment: 
+      name: prod
+      resourceType: VirtualMachine
+    strategy:
+     runOnce:
+        deploy:
+          steps:
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                # Write your commands here
+                sudo systemctl stop tomcat
+                sudo rm -rf /opt/tomcat/webapps/ROOT
+                sudo rm -rf /opt/tomcat/webapps/ROOT.war
+                sudo cp /home/ubuntu/ROOT.war /opt/tomcat/webapps/
+                sudo systemctl daemon-reload
+                sudo systemctl enable tomcat
+                sudo systemctl start tomcat
+                echo 'Hello world'
+            displayName: "Deploying New Application"
