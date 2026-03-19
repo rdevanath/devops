@@ -6,7 +6,7 @@ This repository demonstrates hands-on DevOps pipeline implementation using Azure
 
 Azure DevOps YAML | Python | Maven | Spring Boot | Tomcat | AWS EC2 | Docker | OpenSSH
 
-Terraform | AWS | Ansible | Docker | Docker Compose | Linux | Infrastructure as Code | Containerization
+Terraform | AWS | Ansible | Docker | Docker Compose | Linux | Infrastructure as Code | Containerization | Prometheus & Graffana
 
 ---
 
